@@ -4,10 +4,6 @@ This repository hosts a secure and efficient **URL Shortener** application built
 
 ---
 
-## 🔗 **Live Preview**  
-https://your-shortener.vercel.app/
-
----
 
 ## 🚀 **Features**
 
