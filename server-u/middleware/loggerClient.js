@@ -9,10 +9,6 @@ export const Log = async (stack, level, pkg, message) => {
       level,
       package: pkg,
       message
-    }, {
-      headers: {
-        Authorization: `Bearer ${process.env.LOGGER_TOKEN}`
-      }
     });
   } catch (err) {
     console.error("Log error:", err.response?.data || err.message);

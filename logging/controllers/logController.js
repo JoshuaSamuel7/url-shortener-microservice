@@ -9,3 +9,15 @@ export const createLog = async (req, res) => {
     res.status(500).json({ error: "Failed to create log" });
   }
 };
+
+export const displayLogs=async(req,res)=>{
+  try{
+    const logs=await Log.find();
+    if(!logs) return res.status(500).json({"message":"Error"})
+    res.status(200).json({"message":logs});
+  }catch(err){
+    console.log(err);
+    
+  }
+  
+}

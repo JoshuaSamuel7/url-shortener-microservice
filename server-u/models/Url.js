@@ -9,8 +9,12 @@ const clickSchema = new mongoose.Schema({
 const urlSchema = new mongoose.Schema({
   shortcode: { type: String, unique: true },
   url: String,
-  expiry: Date,
-  clicks: [clickSchema]
+  expiry: {
+    type:Date,
+    expires:0
+  },
+  clicks: [clickSchema],
+
 }, { timestamps: true });
 
 export default mongoose.model("Url", urlSchema);

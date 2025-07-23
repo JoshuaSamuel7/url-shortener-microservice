@@ -6,7 +6,7 @@ export const shortenUrl = async (req, res) => {
   const { url, shortcode, validity } = req.body;
   try {
     let code = shortcode || generateCode();
-    let expiry = new Date(Date.now() + ((validity || 30) * 60000));
+    let expiry = new Date(Date.now() + ((validity || 24) *60*60*1000));
 
     if (shortcode) {
       const exists = await Url.findOne({ shortcode });
@@ -15,7 +15,6 @@ export const shortenUrl = async (req, res) => {
         return res.status(409).json({ error: "Shortcode already exists" });
       }
     }
-
     const newUrl = new Url({ shortcode: code, url, expiry });
     await newUrl.save();
     await Log("backend", "info", "shorten", `Short URL created: ${code}`);
@@ -35,7 +34,6 @@ export const redirectUrl = async (req, res) => {
       await Log("backend", "warn", "redirect", "Expired or invalid link");
       return res.status(404).json({ error: "Link expired or invalid" });
     }
-
     const referrer = req.get("referer") || "unknown";
     const location = req.ip || "unknown";
     found.clicks.push({ referrer, location });
@@ -53,7 +51,6 @@ export const getStats = async (req, res) => {
   try {
     const { code } = req.params;
     const found = await Url.findOne({ shortcode: code });
-
     if (!found) {
       await Log("backend", "warn", "stats", "Stats request for unknown code");
       return res.status(404).json({ error: "Shortcode not found" });
