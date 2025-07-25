@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const urlSlice=createSlice({
     name:"url",
-    initialState:"http://localhost:5000/",
+    initialState:import.meta.env.SERVER,
     reducers:{}
 })
 export default urlSlice.reducer
