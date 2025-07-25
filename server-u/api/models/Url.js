@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const clickSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
@@ -10,17 +10,15 @@ const urlSchema = new mongoose.Schema({
   shortcode: { type: String, unique: true },
   url: String,
   expiry: {
-    type:Date,
-    expires:0
+    type: Date,
+    expires: 0
   },
   clicks: [clickSchema],
-   user: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true
   }
-
-
 }, { timestamps: true });
 
-export default mongoose.model("Url", urlSchema);
+module.exports = mongoose.model("Url", urlSchema);

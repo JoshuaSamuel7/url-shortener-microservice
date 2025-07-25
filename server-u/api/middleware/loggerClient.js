@@ -1,8 +1,8 @@
-import axios from "axios";
-import dotenv from "dotenv";
+const axios = require("axios");
+const dotenv = require("dotenv");
 dotenv.config();
 
-export const Log = async (stack, level, pkg, message) => {
+const Log = async (stack, level, pkg, message) => {
   try {
     await axios.post(process.env.LOGGER_URL, {
       stack,
@@ -14,3 +14,5 @@ export const Log = async (stack, level, pkg, message) => {
     console.error("Log error:", err.response?.data || err.message);
   }
 };
+
+module.exports = { Log };

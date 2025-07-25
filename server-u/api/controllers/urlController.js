@@ -1,12 +1,13 @@
-import Url from "../models/Url.js";
-import generateCode from "../utils/generateCode.js";
-import { Log } from "../middleware/loggerClient.js";
+const Url = require("../models/Url");
+const generateCode = require("../utils/generateCode");
+const { Log } = require("../middleware/loggerClient");
 
-export const shortenUrl = async (req, res) => {
+const shortenUrl = async (req, res) => {
   const { url, shortcode, validity } = req.body;
   try {
     let code = shortcode || generateCode();
-    let expiry = new Date(Date.now() + ((validity || 24) *60*60*1000));    
+    let expiry = new Date(Date.now() + ((validity || 24) * 60 * 60 * 1000));
+
     if (shortcode) {
       const exists = await Url.findOne({ shortcode });
       if (exists) {
@@ -14,7 +15,8 @@ export const shortenUrl = async (req, res) => {
         return res.status(409).json({ error: "Shortcode already exists" });
       }
     }
-    const newUrl = new Url({ shortcode: code, url, expiry,user:req.user._id });
+
+    const newUrl = new Url({ shortcode: code, url, expiry, user: req.user._id });
     await newUrl.save();
     await Log("backend", "info", "shorten", `Short URL created: ${code}`);
     res.json({ shortUrl: code, expiresAt: expiry });
@@ -24,7 +26,7 @@ export const shortenUrl = async (req, res) => {
   }
 };
 
-export const redirectUrl = async (req, res) => {
+const redirectUrl = async (req, res) => {
   try {
     const { code } = req.params;
     const found = await Url.findOne({ shortcode: code });
@@ -32,20 +34,21 @@ export const redirectUrl = async (req, res) => {
       await Log("backend", "warn", "redirect", "Expired or invalid link");
       return res.status(404).json({ error: "Link expired or invalid" });
     }
+
     const referrer = req.get("referer") || "unknown";
     const location = req.ip || "unknown";
     found.clicks.push({ referrer, location });
     await found.save();
 
     await Log("backend", "info", "redirect", `Redirected to: ${found.url}`);
-    res.json({url:found.url});
+    res.json({ url: found.url });
   } catch (err) {
     await Log("backend", "error", "redirect", err.message);
     res.status(500).json({ error: "Redirection error" });
   }
 };
 
-export const getStats = async (req, res) => {
+const getStats = async (req, res) => {
   try {
     const { code } = req.params;
     const found = await Url.findOne({ shortcode: code });
@@ -53,7 +56,8 @@ export const getStats = async (req, res) => {
       await Log("backend", "warn", "stats", "Stats request for unknown code");
       return res.status(404).json({ error: "Shortcode not found" });
     }
-    if(!found.user.equals(req.user._id)) return res.json({"message":"You are not the owner"})
+    if (!found.user.equals(req.user._id)) return res.json({ message: "You are not the owner" });
+
     res.json({
       shortcode: code,
       url: found.url,
@@ -71,11 +75,19 @@ export const getStats = async (req, res) => {
     res.status(500).json({ error: "Stats fetch error" });
   }
 };
-export const getStatsList =async(req,res)=>{
+
+const getStatsList = async (req, res) => {
   try {
-    const shorturls=await Url.find({user:req.user._id}).select("shortcode")
-    res.status(200).json({"message":shorturls});
+    const shorturls = await Url.find({ user: req.user._id }).select("shortcode");
+    res.status(200).json({ message: shorturls });
   } catch (error) {
     console.log(error);
   }
-}
+};
+
+module.exports = {
+  shortenUrl,
+  redirectUrl,
+  getStats,
+  getStatsList
+};

@@ -1,11 +1,14 @@
-import express from "express";
-import { register, login,current, logoutUser } from "../controllers/authController.js";
-import { displayLogs } from "../middleware/displayLogs.js";
-import { protectRoute } from "../middleware/authMiddleware.js";
+const express = require("express");
+const { register, login, current, logoutUser } = require("../controllers/authController");
+const { displayLogs } = require("../middleware/displayLogs");
+const { protectRoute } = require("../middleware/authMiddleware");
+
 const router = express.Router();
+
 router.post("/register", register);
 router.post("/login", login);
-router.get("/current-user",protectRoute,current)
-router.get("/displaylogs",protectRoute,displayLogs)
-router.get("/logout",protectRoute,logoutUser)
-export default router;
+router.get("/current-user", protectRoute, current);
+router.get("/displaylogs", protectRoute, displayLogs);
+router.get("/logout", protectRoute, logoutUser);
+
+module.exports = router;
