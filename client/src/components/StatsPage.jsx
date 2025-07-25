@@ -1,22 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./StatsPage.css";
-
-const StatsView = () => {
+import { useSelector } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
+import Alert from "@mui/material/Alert";
+import { ToastContainer,toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+const StatsPage = () => {
   const [shortcode, setShortcode] = useState("");
-  const [stats, setStats] = useState(null);
-  const [error, setError] = useState("");
-  const handleFetchStats = async () => {
-    try {
-      const res = await axios.get(`http://localhost:5000/shorturls/${shortcode}`);
-      setStats(res.data);
-      setError("");
-    } catch (err) {
-      setStats(null);
-      setError("Shortcode not found or server error.");
+  const url=useSelector(state=>state.url);
+  const [allcodes,setAllCodes]=useState([]);
+  const [error,setError]=useState("");
+  const navigate=useNavigate();
+  useEffect(()=>{
+    axios.get(url+"shorturls/getAll",{withCredentials:true})
+  .then((response)=>{
+    setAllCodes(response.data.message);
+  })
+  .catch(err=>console.log(err)
+  )
+  },[])
+  const checkShortCode=(e)=>{
+    e.preventDefault();
+     const exists = allcodes.some((code) => code.shortcode === shortcode);
+    if(exists){
+      navigate(`/stats/${shortcode}`)
+    }else{
+      toast.error("You are not the owner");
     }
-  };
+  }
   return (
+    <>
+    
     <div className="stats-page">
       <h2>URL Statistics</h2>
       <div className="input-group">
@@ -26,29 +41,27 @@ const StatsView = () => {
           value={shortcode}
           onChange={(e) => setShortcode(e.target.value)}
         />
-        <button onClick={handleFetchStats}>Get Stats</button>
+        <button onClick={checkShortCode}>Get Stats</button>
       </div>
-      {error && <p className="error">{error}</p>}
-      {stats && (
-        <div className="stats-result">
-          <p><strong>Original URL:</strong> {stats.url}</p>
-          <p><strong>Shortcode:</strong> {stats.shortcode}</p>
-          <p><strong>Created At:</strong> {new Date(stats.createdAt).toLocaleString()}</p>
-          <p><strong>Expires At:</strong> {new Date(stats.expiry).toLocaleString()}</p>
-          <p><strong>Total Clicks:</strong> {stats.totalClicks}</p>
-          <div className="click-details">
-            <strong>Click Details:</strong>
-            <ul>
-              {stats.clickDetails.map((click, i) => (
-                <li key={i}>
-                  {new Date(click.timestamp).toLocaleString()} — {click.location} (referrer: {click.referrer})
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
+
     </div>
+    <div className="stats-page">
+      <h3>Your Short Urls</h3>
+      {
+        allcodes.length>0?
+        allcodes.map((code)=>{
+          return(
+            <div style={{margin:"1.5vh"}}>
+              <a href={`/stats/${code.shortcode}`}>{code.shortcode}</a>
+              </div>
+          )
+        }):<>
+        No short Urls
+        </>
+      }
+    </div>
+    <ToastContainer theme="colored"/>
+    </>
   );
-};
-export default StatsView;
+}
+export default StatsPage;

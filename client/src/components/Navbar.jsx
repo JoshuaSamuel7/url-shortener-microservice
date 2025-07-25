@@ -15,8 +15,11 @@ import AdbIcon from "@mui/icons-material/Adb";
 import LinkIcon from "@mui/icons-material/Link";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../store/userSlice";
-const pages = ["Products", "About ", "Stats"];
-const settings = ["Logout"];
+const pages = [
+  { name: "Home", path: "/" },
+  { name: "About", path: "/about" },
+  { name: "Stats", path: "/stats" }
+];const settings = ["Logout"];
 import persistor from "../store/store";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -41,6 +44,9 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const handleRedirect =()=>{
+    navigate("")
+  }
   const handleLogout = () => {
     axios
       .get(url + "auth/logout", { withCredentials: true })
@@ -53,14 +59,14 @@ function Navbar() {
       .catch((err) => console.log(err));
   };
   return (
-    <AppBar position="static" color="black" sx={{ mb: "10vh" }}>
+    <AppBar position="static" sx={{ mb: "10vh",width:"100vw",  backgroundColor:"#00809D"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <LinkIcon sx={{ mr: "10px" }} />
+          <LinkIcon sx={{ mr: "10px", color:"#FFD700"}} />
           <Typography
             variant="h6"
             noWrap
-            component="a"
+            component=""
             href=""
             sx={{
               mr: 2,
@@ -68,14 +74,14 @@ function Navbar() {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "white",
+              color: "#FFD700",
               textDecoration: "none",
             }}
           >
             URL Shortener
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none","&:hover":"#D3AF37" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -103,46 +109,27 @@ function Navbar() {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>{page}</Typography>
+                <MenuItem key={page.name} onClick={()=>navigate(page.path)} sx={{}}>
+                  <Typography sx={{ textAlign: "center"}}>{page.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            LOGO
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }}}>
             {pages.map((page) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+                key={page.name}
+                onClick={()=>navigate(page.path)}
+                sx={{ my: 2, color: "white", display: "block","&:hover":{backgroundColor:"#D3AF37"} }}
               >
-                {page}
+                {page.name}
               </Button>
             ))}
           </Box>
           {user ? (
             <Box sx={{ flexGrow: 0 }}>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={user.name} src="/static/images/avatar/2.jpg" />
+              <IconButton onClick={handleOpenUserMenu} sx={{ pr: 0 }}>
+                <Avatar alt={user.name} src=" " />
               </IconButton>
               <Menu
                 sx={{ mt: "45px" }}

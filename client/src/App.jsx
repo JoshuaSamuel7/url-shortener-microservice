@@ -5,12 +5,15 @@ import axios from "axios";
 
 import { addUser } from "./store/userSlice";
 import { UrlShortener } from "./components/ShortnerForm";
-import StatsView from "./components/StatsPage";
+import StatsView from "./components/StatsView";
 import Login from "./components/Login";
 import RedirectPage from "./components/redirectPage";
 import Navbar from "./components/Navbar";
 import Register from "./components/Register";
-
+import CircularProgress from "@mui/material/CircularProgress";
+import StatsPage from "./components/StatsPage";
+import Error404 from "./components/Error404";
+import About from "./components/About";
 const App = () => {
   const dispatch = useDispatch();
   const url = useSelector((state) => state.url);
@@ -32,7 +35,7 @@ const App = () => {
       });
   }, [url, dispatch]);
 
-  if (loading) return <div>Loading...</div>; 
+  if (loading) return <div style={{display:"flex", justifyContent:"center",alignContent:"center"}}><CircularProgress color="success" /></div>; 
 
   return (
     <>
@@ -45,8 +48,12 @@ const App = () => {
             path="/"
             element={user ? <UrlShortener /> : <Navigate to="/login" />}
           />
-          <Route path="/stats" element={user ? <StatsView /> : <Navigate to="/login" />} />
+
+          <Route path="/stats" element={user ? <StatsPage /> : <Navigate to="/login" />} />
+          <Route path="/stats/:code" element={user ? <StatsView /> : <Navigate to="/login" />} />
           <Route path="/:code" element={<RedirectPage />} />
+          <Route path="/about" element={<About   />} />
+          <Route path="/notfound" element={<Error404 />} />
         </Routes>
       </BrowserRouter>
     </>

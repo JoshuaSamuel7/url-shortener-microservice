@@ -3,11 +3,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 5%;
     width: 30vw;
-    height: 50vh;
-    border: 2px solid white;
+    max-height: 50vh;
+    padding: 5vh 0 0;
+    border: 2px solid #00809D;
 
+}
+.login h1{
+    color: #00809D;
 }
 .loginbox input {
     width: 80%;
@@ -16,13 +19,16 @@
     margin: 2vh 2vw;
     border-radius: 10px;
     outline: none;
+    border: none;
+}
+.loginbox input:focus{
+    outline: none;
 }
 .loginbox button {
     margin: 4vh 4vw;
     width: 70%;
-    
+    background-color: #00809D;
 }
-
 .login{
     display: flex;
     align-items: center;

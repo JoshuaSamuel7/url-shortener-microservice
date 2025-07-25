@@ -1,9 +1,11 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { Log } from "../middleware/loggerClient.js";
 export const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, password } = req.body;
+     const email = req.body.email.trim().toLowerCase();
     const exists = await User.findOne({ email });
     if (exists) {
       await Log("backend", "error", "register", "User exists: " + email);
@@ -16,7 +18,7 @@ export const register = async (req, res) => {
         "register",
         "Password too short for: " + email
       );
-      return res.status(400).json({ message: "6 charaxters" });
+      return res.status(400).json({ message: "Minimum 6 characters for Password" });
     }
     const hashedPass = await bcrypt.hash(password, 15);
     const user = new User({ name, email, password: hashedPass });

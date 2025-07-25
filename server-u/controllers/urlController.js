@@ -14,7 +14,7 @@ export const shortenUrl = async (req, res) => {
         return res.status(409).json({ error: "Shortcode already exists" });
       }
     }
-    const newUrl = new Url({ shortcode: code, url, expiry });
+    const newUrl = new Url({ shortcode: code, url, expiry,user:req.user._id });
     await newUrl.save();
     await Log("backend", "info", "shorten", `Short URL created: ${code}`);
     res.json({ shortUrl: code, expiresAt: expiry });
@@ -53,7 +53,7 @@ export const getStats = async (req, res) => {
       await Log("backend", "warn", "stats", "Stats request for unknown code");
       return res.status(404).json({ error: "Shortcode not found" });
     }
-
+    if(!found.user.equals(req.user._id)) return res.json({"message":"You are not the owner"})
     res.json({
       shortcode: code,
       url: found.url,
@@ -71,3 +71,11 @@ export const getStats = async (req, res) => {
     res.status(500).json({ error: "Stats fetch error" });
   }
 };
+export const getStatsList =async(req,res)=>{
+  try {
+    const shorturls=await Url.find({user:req.user._id}).select("shortcode")
+    res.status(200).json({"message":shorturls});
+  } catch (error) {
+    console.log(error);
+  }
+}
