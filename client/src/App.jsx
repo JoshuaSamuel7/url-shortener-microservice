@@ -7,7 +7,7 @@ import { addUser } from "./store/userSlice";
 import { UrlShortener } from "./components/ShortnerForm";
 import StatsView from "./components/StatsView";
 import Login from "./components/Login";
-import RedirectPage from "./components/redirectPage";
+import RedirectPage from "./components/RedirectPage";
 import Navbar from "./components/Navbar";
 import Register from "./components/Register";
 import CircularProgress from "@mui/material/CircularProgress";
