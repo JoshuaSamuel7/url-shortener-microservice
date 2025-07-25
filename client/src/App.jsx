@@ -17,9 +17,7 @@ import About from "./components/About";
 const App = () => {
   const dispatch = useDispatch();
   const url = useSelector((state) => state.url);
-  const {user} = useSelector((state) => state.user);
-  console.log(user);
-  
+  const {user} = useSelector((state) => state.user);  
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     axios
