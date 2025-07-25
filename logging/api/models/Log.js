@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const logSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
@@ -8,4 +8,4 @@ const logSchema = new mongoose.Schema({
   message: String
 });
 
-export default mongoose.model("Log", logSchema);
+module.exports = mongoose.model("Log", logSchema);

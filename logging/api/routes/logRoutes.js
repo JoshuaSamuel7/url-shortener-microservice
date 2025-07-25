@@ -1,7 +1,8 @@
-import express from "express";
-import { createLog,displayLogs } from "../controllers/logController.js";
+const express = require("express");
+const { createLog, displayLogs } = require("../controllers/logController");
 const router = express.Router();
 
 router.post("/", createLog);
-router.get("/display",displayLogs)
-export default router;
+router.get("/display", displayLogs);
+
+module.exports = router;
