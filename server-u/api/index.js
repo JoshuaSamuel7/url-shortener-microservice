@@ -16,6 +16,7 @@ app.use(cookieParser())
 app.use("/", urlRoutes);
 app.use("/auth",authRoutes);
 
+app.use("/test",(req,res)=>res.send("WOrking"));
 
 
 mongoose.connect(process.env.MONGO_URI)
