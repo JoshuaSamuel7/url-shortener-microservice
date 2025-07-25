@@ -1,0 +1,32 @@
+.loginbox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+    width: 30vw;
+    height: 50vh;
+    border: 2px solid white;
+
+}
+.loginbox input {
+    width: 80%;
+    height: 3vh;
+    padding: 10px;
+    margin: 2vh 2vw;
+    border-radius: 10px;
+    outline: none;
+}
+.loginbox button {
+    margin: 4vh 4vw;
+    width: 70%;
+    
+}
+
+.login{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+}

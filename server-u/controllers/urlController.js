@@ -6,8 +6,7 @@ export const shortenUrl = async (req, res) => {
   const { url, shortcode, validity } = req.body;
   try {
     let code = shortcode || generateCode();
-    let expiry = new Date(Date.now() + ((validity || 24) *60*60*1000));
-
+    let expiry = new Date(Date.now() + ((validity || 24) *60*60*1000));    
     if (shortcode) {
       const exists = await Url.findOne({ shortcode });
       if (exists) {
@@ -18,7 +17,7 @@ export const shortenUrl = async (req, res) => {
     const newUrl = new Url({ shortcode: code, url, expiry });
     await newUrl.save();
     await Log("backend", "info", "shorten", `Short URL created: ${code}`);
-    res.json({ shortUrl: `http://localhost:5000/${code}`, expiresAt: expiry });
+    res.json({ shortUrl: code, expiresAt: expiry });
   } catch (err) {
     await Log("backend", "fatal", "shorten", err.message);
     res.status(500).json({ error: "Server Error" });
@@ -29,7 +28,6 @@ export const redirectUrl = async (req, res) => {
   try {
     const { code } = req.params;
     const found = await Url.findOne({ shortcode: code });
-
     if (!found || new Date() > found.expiry) {
       await Log("backend", "warn", "redirect", "Expired or invalid link");
       return res.status(404).json({ error: "Link expired or invalid" });
@@ -40,7 +38,7 @@ export const redirectUrl = async (req, res) => {
     await found.save();
 
     await Log("backend", "info", "redirect", `Redirected to: ${found.url}`);
-    res.redirect(found.url);
+    res.json({url:found.url});
   } catch (err) {
     await Log("backend", "error", "redirect", err.message);
     res.status(500).json({ error: "Redirection error" });

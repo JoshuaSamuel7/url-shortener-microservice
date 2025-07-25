@@ -7,7 +7,7 @@ export const register = async (req, res) => {
     const exists = await User.findOne({ email });
     if (exists) {
       await Log("backend", "error", "register", "User exists: " + email);
-      return res.status(400).json({ error: "User exists" });
+      return res.status(400).json({ message: "User exists" });
     }
     if (password.length < 6) {
       await Log(
@@ -23,8 +23,9 @@ export const register = async (req, res) => {
     await user.save();
     res.status(201).json({ message: "User created" });
   } catch (err) {
+    console.log(err);
     await Log("backend", "fatal", "register", err.message || err);
-    res.status(500).json({ error: "Server Error" });
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -42,19 +43,42 @@ export const login = async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
     const token = jwt.sign(
-      { _id: user._id, email: user.email },
+      { _id: user._id, email: user.email, name:user.name },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
     res.cookie("jwt", token, {
       maxAge: 24 * 60 * 60 * 1000,
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "lax",
       secure: false,
     });
-    res.json({ token, user: { id: user._id, name: user.name } });
+    res.json({ token, user: { id: user._id, email: user.email,name:user.name } });
   } catch (err) {
+    console.log(err);
+    
     await Log("backend", "fatal", "login", err.message || err);
     res.status(500).json({ error: "Server Error" });
   }
 };
+export const current=(req,res)=>{
+  try {
+ if (!req.user) return res.status(401).json({ error: "Unauthorized" });
+    return res.status(200).json(req.user);
+    } catch (error) {
+    console.log(error);
+    
+  }
+}
+export const logoutUser=async (req,res)=>{
+  try{
+    res.cookie("jwt","",{
+    maxAge:0,
+  })
+  return res.status(200).json({"message":"Success"})
+  }catch(err){
+    console.log(err);
+    await Log("backend", "fatal", "login", err.message || err);
+  }
+  
+}
