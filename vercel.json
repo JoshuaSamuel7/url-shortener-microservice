@@ -31,10 +31,6 @@
     {
       "src": "/logs/(.*)",
       "dest": "logger/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "client/dist/$1"
     }
   ]
 }
