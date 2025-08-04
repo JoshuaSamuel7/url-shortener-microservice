@@ -4,33 +4,21 @@
     {
       "src": "client/package.json",
       "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+      "config": { "distDir": "dist" }
     },
     {
       "src": "server-u/index.js",
       "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["server-u/**"]
-      }
+      "config": { "includeFiles": ["server-u/**"] }
     },
     {
-      "src": "logger/index.js",
+      "src": "logging/index.js",
       "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["logger/**"]
-      }
+      "config": { "includeFiles": ["logging/**"] }
     }
   ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "server-u/index.js"
-    },
-    {
-      "src": "/logs/(.*)",
-      "dest": "logger/index.js"
-    }
+    { "src": "/api/(.*)", "dest": "server-u/index.js" },
+    { "src": "/logs/(.*)", "dest": "logging/index.js" }
   ]
 }
