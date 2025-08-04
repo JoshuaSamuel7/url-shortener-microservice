@@ -1,0 +1,43 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:match*",
+      "destination": "/server-u/:match*"
+    },
+    {
+      "source": "/logs/:match*",
+      "destination": "/logging/:match*"
+    },
+    {
+      "source": "/:match*",
+      "destination": "/client/:match*"
+    }
+  ],
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"  // use "build" if using Create React App
+      }
+    },
+    {
+      "src": "server-u/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "logging/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server-u/index.js"
+    },
+    {
+      "src": "/logs/(.*)",
+      "dest": "logging/index.js"
+    }
+  ]
+}
