@@ -57,7 +57,7 @@ const login = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
       httpOnly: true,
       sameSite: "lax",
-      secure: false,
+      secure: true,
     });
 
     res.json({ token, user: { id: user._id, email: user.email, name: user.name } });
