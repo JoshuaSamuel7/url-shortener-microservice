@@ -25,5 +25,4 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-app.listen(5000,()=>{console.log("Server at 5000");
-})
+module.exports = app;
