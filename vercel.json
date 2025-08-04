@@ -19,6 +19,7 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "server-u/index.js" },
-    { "src": "/logs/(.*)", "dest": "logging/index.js" }
+    { "src": "/logs/(.*)", "dest": "logging/index.js" },
+    { "src": "/(.*)", "dest": "/" } 
   ]
 }
